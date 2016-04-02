@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  php-fpm:
+    image: php:7.0.4-fpm
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - php-network
+
+  nginx:
+    image: jh/nginx
+    links:
+      - php-fpm
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/
+      - ./src:/var/www/html
+    networks:
+      - php-network
+
+networks:
+  php-network:
+    driver: bridge
