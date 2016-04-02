@@ -1,0 +1,21 @@
+tasks:
+  s: ['stop', 'start']
+  start: ['php', 'nginx']
+  stop: >
+    @shell docker rm -f $(docker ps -aq)
+  php: >
+    @shell docker run
+    --name php-fpm
+    -v /Users/shakyshane/docker/src:/var/www/html
+    -d
+    sh/php
+
+  nginx: >
+    @shell docker run
+    --name fpm-nginx
+    -p 80:80
+    -v $(pwd)/nginx:/etc/nginx/conf.d/
+    -v /Users/shakyshane/docker/src:/usr/share/nginx/html
+    --link php-fpm:php-fpm
+    -d
+    nginx
